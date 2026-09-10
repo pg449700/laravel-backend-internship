@@ -112,4 +112,21 @@ class GymTest extends TestCase
         $list = $this->getJson('/api/members');
         $list->assertStatus(200);
     }
+
+    public function test_middlewares_attached_to_web_and_api_routes(): void
+    {
+        $webResponse = $this->get('/');
+        $webResponse->assertStatus(200);
+        $webResponse->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+        $webResponse->assertHeader('X-Content-Type-Options', 'nosniff');
+        $webResponse->assertHeader('X-XSS-Protection', '1; mode=block');
+        $webResponse->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+        $webResponse->assertHeader('X-Response-Time');
+
+        $apiResponse = $this->get('/api/dashboard/stats');
+        $apiResponse->assertStatus(200);
+        $apiResponse->assertHeader('Content-Type', 'application/json');
+        $apiResponse->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+        $apiResponse->assertHeader('X-Response-Time');
+    }
 }

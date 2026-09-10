@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\MemberController;
 use App\Http\Controllers\Api\MembershipController;
 use Illuminate\Support\Facades\Route;
 
-Route::name('api.')->group(function () {
+Route::middleware(['force.json', 'security.headers', 'log.activity', 'throttle:60,1'])->name('api.')->group(function () {
     Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
     Route::apiResource('members', MemberController::class);
     Route::apiResource('memberships', MembershipController::class);
