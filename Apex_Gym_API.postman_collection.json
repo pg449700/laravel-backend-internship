@@ -1,0 +1,716 @@
+{
+	"info": {
+		"_postman_id": "8f3b2089-6a97-4d92-9118-2c079e0a2941",
+		"name": "Apex Strength Club - Gym API",
+		"description": "Comprehensive Postman Collection for the Apex Strength Club Laravel REST API. Covers Dashboard Metrics, Members, Memberships, Gym Classes, and Bookings.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "member_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "membership_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "class_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "booking_id",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Dashboard Stats & Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dashboard/stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"stats"
+							]
+						},
+						"description": "Returns aggregate gym statistics including total members, active memberships, scheduled classes, active bookings, recent bookings, and upcoming classes."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Members",
+			"item": [
+				{
+					"name": "List All Members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members"
+							]
+						},
+						"description": "Fetches all gym members with eager-loaded memberships and bookings."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var res = pm.response.json();",
+									"    if (res.data && res.data.id) {",
+									"        pm.collectionVariables.set('member_id', res.data.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Alexander\",\n    \"last_name\": \"Stone\",\n    \"email\": \"alex.stone@example.com\",\n    \"join_date\": \"2026-03-15\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members"
+							]
+						},
+						"description": "Registers a new member. Automatically updates the collection variable `member_id` on status 201."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Member",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members/{{member_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{member_id}}"
+							]
+						},
+						"description": "Retrieves details for a specific member by ID, including their memberships and class bookings."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Alexander\",\n    \"last_name\": \"Stone\",\n    \"email\": \"alexander.stone@example.com\",\n    \"join_date\": \"2026-03-15\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/members/{{member_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{member_id}}"
+							]
+						},
+						"description": "Updates profile details for a given member."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Member",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members/{{member_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"{{member_id}}"
+							]
+						},
+						"description": "Deletes a member record."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Memberships",
+			"item": [
+				{
+					"name": "List All Memberships",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/memberships",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"memberships"
+							]
+						},
+						"description": "Fetches all memberships along with associated member information."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Membership",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var res = pm.response.json();",
+									"    if (res.data && res.data.id) {",
+									"        pm.collectionVariables.set('membership_id', res.data.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": {{member_id}},\n    \"membership_type\": \"Gold Annual\",\n    \"monthly_fee\": 49.99,\n    \"status\": \"Active\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/memberships",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"memberships"
+							]
+						},
+						"description": "Assigns a membership tier to an existing member. Status can be 'Active' or 'Inactive'."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Membership",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/memberships/{{membership_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"memberships",
+								"{{membership_id}}"
+							]
+						},
+						"description": "Retrieves membership details by ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Membership",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": {{member_id}},\n    \"membership_type\": \"Platinum VIP\",\n    \"monthly_fee\": 79.99,\n    \"status\": \"Active\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/memberships/{{membership_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"memberships",
+								"{{membership_id}}"
+							]
+						},
+						"description": "Updates an existing membership plan, fee, or status."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Membership",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/memberships/{{membership_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"memberships",
+								"{{membership_id}}"
+							]
+						},
+						"description": "Deletes a membership record."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gym Classes",
+			"item": [
+				{
+					"name": "List All Classes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/classes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"classes"
+							]
+						},
+						"description": "Fetches all scheduled fitness classes with their current booking counts."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Gym Class",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var res = pm.response.json();",
+									"    if (res.data && res.data.id) {",
+									"        pm.collectionVariables.set('class_id', res.data.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class_name\": \"HIIT & Strength\",\n    \"instructor_name\": \"Coach Marcus\",\n    \"schedule_time\": \"2026-04-10 18:00:00\",\n    \"capacity\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/classes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"classes"
+							]
+						},
+						"description": "Creates a new scheduled gym class. Automatically updates `class_id` variable on status 201."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Class",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/classes/{{class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"classes",
+								"{{class_id}}"
+							]
+						},
+						"description": "Retrieves class details including enrolled members and bookings."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Gym Class",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"class_name\": \"Advanced HIIT & Power\",\n    \"instructor_name\": \"Coach Marcus\",\n    \"schedule_time\": \"2026-04-10 18:30:00\",\n    \"capacity\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/classes/{{class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"classes",
+								"{{class_id}}"
+							]
+						},
+						"description": "Updates class details like name, instructor, time, or capacity."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Gym Class",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/classes/{{class_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"classes",
+								"{{class_id}}"
+							]
+						},
+						"description": "Deletes a class record."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "List All Bookings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						},
+						"description": "Fetches all reservations with related member and class info."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var res = pm.response.json();",
+									"    if (res.data && res.data.id) {",
+									"        pm.collectionVariables.set('booking_id', res.data.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": {{member_id}},\n    \"class_id\": {{class_id}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						},
+						"description": "Books a class for a member. Prevents duplicate booking and checks class capacity limits. Sets `booking_id` variable on status 201."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Booking",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bookings/{{booking_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings",
+								"{{booking_id}}"
+							]
+						},
+						"description": "Retrieves a booking record by ID with member and class associations."
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel (Delete) Booking",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bookings/{{booking_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings",
+								"{{booking_id}}"
+							]
+						},
+						"description": "Cancels a booking by deleting its record."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
